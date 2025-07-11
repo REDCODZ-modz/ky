@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LZ Secure Key Generator Premium (Lokal)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.2/dist/vanilla-tilt.min.js"></script>
+
+    <!-- TIDAK ADA FIREBASE SDK LAGI -->
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #020617;
+            color: #e2e8f0;
+            overflow: hidden;
+            position: relative;
+        }
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        .content-container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .font-orbitron { font-family: 'Orbitron', sans-serif; }
+        .font-roboto-mono { font-family: 'Roboto Mono', monospace; }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform-style: preserve-3d;
+        }
+        .btn-primary {
+            background: linear-gradient(45deg, #0ea5e9, #6366f1);
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(14, 165, 233, 0.4), 0 0 30px rgba(99, 102, 241, 0.3);
+            transform: perspective(1px) translateZ(0);
+        }
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(14, 165, 233, 0.6), 0 0 50px rgba(99, 102, 241, 0.4);
+        }
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+        .feedback-bubble {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+
+    <div class="content-container">
+        <div data-tilt data-tilt-max="5" data-tilt-speed="400" data-tilt-perspective="1000" class="glass-card p-6 md:p-8 rounded-2xl shadow-2xl w-full max-w-lg">
+            
+            <div class="text-center mb-8 transform-gpu" style="transform: translateZ(50px);">
+                <h1 class="font-orbitron text-3xl md:text-4xl font-black uppercase text-white tracking-widest" style="text-shadow: 0 0 15px #0ea5e9, 0 0 30px #0ea5e9;">
+                    LZ SECURE
+                </h1>
+                <p class="text-cyan-400 font-semibold tracking-wider">PREMIUM KEY GENERATOR</p>
+            </div>
+
+            <div id="appMessage" class="hidden"></div>
+            <div class="text-center text-sm text-gray-400 mb-6">
+                <!-- Tidak ada User ID lagi karena tidak ada Firebase -->
+            </div>
+
+            <div class="mb-8 p-6 bg-gray-700 rounded-lg border border-gray-600 transform-gpu" style="transform: translateZ(25px);">
+                <h2 class="text-2xl font-bold text-yellow-400 mb-4">Buat Kunci Baru</h2>
+                <div class="mb-4">
+                    <label for="durationSelect" class="block text-gray-300 text-sm font-medium mb-2">
+                        Pilih Durasi Kunci:
+                    </label>
+                    <select id="durationSelect" class="w-full px-4 py-3 bg-gray-600 text-white rounded-lg border border-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                        <option value="1">1 Hari</option>
+                        <option value="7">7 Hari</option>
+                        <option value="30">30 Hari</option>
+                        <option value="90">90 Hari</option>
+                        <option value="365">365 Hari (1 Tahun)</option>
+                    </select>
+                </div>
+                <button id="generateBtn" class="w-full btn-primary text-white font-bold text-lg py-3 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-opacity-75 shadow-lg">
+                    Buat Kunci Premium
+                </button>
+            </div>
+
+            <div class="mt-6 transform-gpu" style="transform: translateZ(20px);">
+                <h2 id="date-display" class="text-center text-slate-500 mb-3 font-semibold text-sm"></h2>
+                <div class="relative group">
+                    <div id="copied-success" class="feedback-bubble absolute -top-12 left-1/2 -translate-x-1/2 bg-green-500 text-white text-sm font-bold px-4 py-1.5 rounded-full opacity-0 pointer-events-none -translate-y-2">
+                        Disalin!
+                    </div>
+                    <div id="copied-error" class="feedback-bubble absolute -top-12 left-1/2 -translate-x-1/2 bg-red-600 text-white text-sm font-bold px-4 py-1.5 rounded-full opacity-0 pointer-events-none -translate-y-2">
+                        Gagal Menyalin
+                    </div>
+                    
+                    <div id="key-container" class="w-full bg-slate-900 p-4 rounded-lg text-lg text-yellow-400 font-roboto-mono text-center border-2 border-dashed border-slate-700 cursor-pointer hover:border-cyan-400 transition-colors break-all">
+                        <span id="generatedKey">Tekan 'Buat Kunci Premium'</span>
+                    </div>
+                </div>
+                
+                <button id="copyBtn" class="w-full mt-4 bg-slate-700 hover:bg-slate-600 text-slate-200 font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                    Salin Kunci
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Inisialisasi Particles.js
+        particlesJS("particles-js", {
+            "particles": { "number": { "value": 60, "density": { "enable": true, "value_area": 800 } }, "color": { "value": "#ffffff" }, "shape": { "type": "circle" }, "opacity": { "value": 0.2, "random": true, "anim": { "enable": true, "speed": 1, "opacity_min": 0.05, "sync": false } }, "size": { "value": 3, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#38bdf8", "opacity": 0.2, "width": 1 }, "move": { "enable": true, "speed": 1, "direction": "none", "random": true, "out_mode": "out" } },
+            "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" }, "resize": true }, "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 0.5 } }, "push": { "particles_nb": 4 } } },
+            "retina_detect": true
+        });
+
+        // Inisialisasi Vanilla-Tilt.js
+        VanillaTilt.init(document.querySelector(".glass-card"), {
+            max: 5,
+            speed: 400,
+            glare: true,
+            "max-glare": 0.2,
+        });
+
+        // Selektor elemen DOM
+        const generateBtn = document.getElementById('generateBtn');
+        const keyContainer = document.getElementById('key-container');
+        const keySpan = document.getElementById('generatedKey');
+        const dateDisplay = document.getElementById('date-display');
+        const copyBtn = document.getElementById('copyBtn');
+        const durationSelect = document.getElementById('durationSelect');
+        const copiedSuccessFeedback = document.getElementById('copied-success');
+        const copiedErrorFeedback = document.getElementById('copied-error');
+
+        // Tanggal epoch untuk perhitungan hari (1 Januari 2024 UTC)
+        const EPOCH_DATE = new Date(Date.UTC(2024, 0, 1, 0, 0, 0));
+        const KEY_PREFIX = "LZI-";
+
+        // Fungsi untuk efek pengetikan
+        function typeWriter(element, text, speed = 20) {
+            element.textContent = '';
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        // Fungsi untuk menghasilkan string acak sederhana (salt)
+        function generateRandomSalt(length) {
+            const characters = '0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return result;
+        }
+
+        // Fungsi untuk menghasilkan kunci premium lokal
+        function generateLocalPremiumKey() {
+            const durationDays = parseInt(durationSelect.value);
+            const expirationDate = new Date();
+            expirationDate.setDate(expirationDate.getDate() + durationDays);
+            
+            // Hitung hari sejak epoch hingga tanggal kedaluwarsa
+            const diffTime = expirationDate.getTime() - EPOCH_DATE.getTime();
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+            const salt = generateRandomSalt(3); // Salt 3 digit acak
+
+            // Gabungkan diffDays dan salt, lalu Base64 encode
+            const dataToEncode = `${diffDays}:${salt}`; // Format: "hari:salt"
+            const encodedData = btoa(dataToEncode);
+
+            // Format kunci akhir: LZI-[BASE64_ENCODED_DATA]
+            const finalKey = `${KEY_PREFIX}${encodedData}`;
+            
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            dateDisplay.textContent = `Kunci berlaku hingga: ${expirationDate.toLocaleDateString('id-ID', options)}`;
+
+            typeWriter(keySpan, finalKey);
+        }
+        
+        // Fungsi untuk menampilkan feedback (disalin/gagal)
+        function showFeedback(element) {
+            element.style.opacity = '1';
+            element.style.transform = 'translate(-50%, 0)';
+            setTimeout(() => {
+                element.style.opacity = '0';
+                element.style.transform = 'translate(-50%, -0.5rem)';
+            }, 2000);
+        }
+
+        // Fungsi untuk menyalin kunci ke clipboard
+        function copyKeyToClipboard(keyText) {
+            if (!keyText) return;
+
+            const textArea = document.createElement('textarea');
+            textArea.value = keyText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showFeedback(copiedSuccessFeedback);
+            } catch (err) {
+                console.error('Gagal menyalin kunci: ', err);
+                showFeedback(copiedErrorFeedback);
+            } finally {
+                document.body.removeChild(textArea);
+            }
+        }
+
+        // Event Listeners utama
+        generateBtn.addEventListener('click', generateLocalPremiumKey);
+        keyContainer.addEventListener('click', () => {
+            const range = document.createRange();
+            range.selectNode(keySpan);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            copyKeyToClipboard(keySpan.textContent);
+        });
+        copyBtn.addEventListener('click', () => copyKeyToClipboard(keySpan.textContent));
+        
+        // Hasilkan kunci saat halaman pertama kali dimuat
+        window.onload = generateLocalPremiumKey;
+    </script>
+</body>
+</html>
+
